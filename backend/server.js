@@ -38,8 +38,8 @@ app.use(cors({
     callback(new Error('CORS not allowed'));
   },
   credentials: true,
-  methods: ['GET','POST','PUT','DELETE','OPTIONS'],
-  allowedHeaders: ['Content-Type','Authorization']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Ensure preflight requests are handled
@@ -65,7 +65,7 @@ const MONGO_URL = process.env.MONGO_URL;
 const DB_NAME = process.env.DB_NAME || 'cricket_league';
 
 mongoose.connect(`${MONGO_URL}/${DB_NAME}`)
-  .then(() => {})
+  .then(() => { })
   .catch(err => console.error('MongoDB connection error:', err));
 
 // ==================== SOCKET.IO ====================
@@ -201,7 +201,12 @@ app.get('/api/', (req, res) => {
 });
 
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'healthy', timestamp: new Date().toISOString() });
+  const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+  res.json({
+    status: 'healthy',
+    database: dbStatus,
+    timestamp: new Date().toISOString()
+  });
 });
 
 // Register routes
