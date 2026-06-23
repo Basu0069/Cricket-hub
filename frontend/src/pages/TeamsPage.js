@@ -20,7 +20,7 @@ import { toast } from 'sonner';
 import axios from 'axios';
 import { Users, Plus, Search, Trophy, MapPin } from 'lucide-react';
 
-const API_URL = process.env.REACT_APP_BACKEND_URL;
+const API_URL = process.env.REACT_APP_BACKEND_URL || '';
 
 export default function TeamsPage() {
   const { token, isAdmin, isManager } = useAuth();

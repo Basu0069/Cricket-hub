@@ -37,7 +37,7 @@ import {
   Minimize2
 } from 'lucide-react';
 
-const API_URL = process.env.REACT_APP_BACKEND_URL;
+const API_URL = process.env.REACT_APP_BACKEND_URL || '';
 
 // Helper to convert overs (e.g., 2.3) to total balls (e.g., 15)
 const oversToBalls = (overs) => {

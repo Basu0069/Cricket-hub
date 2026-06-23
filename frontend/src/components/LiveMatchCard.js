@@ -51,7 +51,7 @@ export default function LiveMatchCard() {
 
         // First try to get live matches directly
         const liveResponse = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}/api/matches/live`
+          `${process.env.REACT_APP_BACKEND_URL || ''}/api/matches/live`
         );
 
         if (liveResponse.data?.length > 0) {
@@ -63,7 +63,7 @@ export default function LiveMatchCard() {
         } else {
           // No live matches, try to get the most recent tournament match
           const tournamentsResponse = await axios.get(
-            `${process.env.REACT_APP_BACKEND_URL}/api/tournaments`
+            `${process.env.REACT_APP_BACKEND_URL || ''}/api/tournaments`
           );
 
           const tournaments = tournamentsResponse.data || [];
@@ -71,7 +71,7 @@ export default function LiveMatchCard() {
 
           if (liveTournament) {
             const matchesResponse = await axios.get(
-              `${process.env.REACT_APP_BACKEND_URL}/api/tournament-matches?tournamentId=${liveTournament.tournament_id}`
+              `${process.env.REACT_APP_BACKEND_URL || ''}/api/tournament-matches?tournamentId=${liveTournament.tournament_id}`
             );
 
             if (matchesResponse.data?.matches?.length > 0) {
@@ -96,7 +96,7 @@ export default function LiveMatchCard() {
     const fetchTeamDetails = async (team1Id, team2Id) => {
       try {
         const teamsResponse = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}/api/teams`
+          `${process.env.REACT_APP_BACKEND_URL || ''}/api/teams`
         );
         const teamsMap = {};
         teamsResponse.data?.forEach(t => {

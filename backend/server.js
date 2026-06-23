@@ -1,4 +1,5 @@
 require('dotenv').config();
+const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -244,6 +245,15 @@ app.get('/api/matches/upcoming', async (req, res) => {
   } catch (error) {
     res.status(500).json({ detail: 'Failed to fetch upcoming matches' });
   }
+});
+
+// ==================== SERVE REACT FRONTEND ====================
+const frontendBuildPath = path.join(__dirname, '../frontend/build');
+app.use(express.static(frontendBuildPath));
+
+// Catch-all: send React app for any non-API route (React Router support)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(frontendBuildPath, 'index.html'));
 });
 
 // ==================== SERVER ====================

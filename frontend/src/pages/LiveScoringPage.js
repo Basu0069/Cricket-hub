@@ -45,7 +45,7 @@ import {
   Award
 } from 'lucide-react';
 
-const API_URL = process.env.REACT_APP_BACKEND_URL;
+const API_URL = process.env.REACT_APP_BACKEND_URL || '';
 
 // Helper function to format overs properly (e.g., 18.3 -> 18.3, not 0.2)
 const formatOvers = (overs) => {

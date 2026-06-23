@@ -21,7 +21,7 @@ import { toast } from 'sonner';
 import axios from 'axios';
 import { Trophy, Plus, Search, User } from 'lucide-react';
 
-const API_URL = process.env.REACT_APP_BACKEND_URL;
+const API_URL = process.env.REACT_APP_BACKEND_URL || '';
 
 export default function PlayersPage() {
   const { token, isAdmin, isManager } = useAuth();
