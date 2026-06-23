@@ -4,20 +4,22 @@ services:
     env: node
     plan: free
     rootDir: .
-    buildCommand: npm install --prefix backend && npm install --prefix frontend && npm run build
+    buildCommand: chmod +x build.sh && ./build.sh
     startCommand: node backend/server.js
     envVars:
       - key: MONGO_URL
-        scope: project
+        sync: false
       - key: DB_NAME
         value: cricket_league
       - key: JWT_SECRET
-        scope: project
+        sync: false
+      - key: FRONTEND_URL
+        value: https://cricket-hub-rp86.onrender.com
       - key: GEMINI_API_KEY
-        scope: project
+        sync: false
       - key: GOOGLE_CLIENT_ID
         value: 473404359350-1jpjmc0g7gndo014ebhkjjbkhu9eouko.apps.googleusercontent.com
       - key: GOOGLE_CLIENT_SECRET
-        scope: project
+        sync: false
       - key: PORT
         value: "10000"
