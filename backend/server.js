@@ -28,15 +28,23 @@ const server = http.createServer(app);
 const allowedOrigins = [
   'http://localhost:3000',
   'http://127.0.0.1:3000',
-  'https://cricket-hub-y63h.vercel.app',   // add your Vercel URL
-  process.env.FRONTEND_URL
+  'https://cricket-hub-y63h.vercel.app',
+  process.env.FRONTEND_URL,
+  process.env.RENDER_EXTERNAL_URL, // auto-set by Render to this service's public URL
 ].filter(Boolean);
+
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true;
+  if (allowedOrigins.includes(origin)) return true;
+  // Monolith deploy: allow any Render subdomain (URL can change between deploys)
+  if (/^https:\/\/[\w-]+\.onrender\.com$/.test(origin)) return true;
+  return false;
+};
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin) return callback(null, true); // allow non-browser requests
-    if (allowedOrigins.includes(origin)) return callback(null, true);
-    callback(new Error('CORS not allowed'));
+    if (isAllowedOrigin(origin)) return callback(null, true);
+    callback(null, false);
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -65,14 +73,32 @@ app.use((req, res, next) => {
 const MONGO_URL = process.env.MONGO_URL;
 const DB_NAME = process.env.DB_NAME || 'cricket_league';
 
-mongoose.connect(`${MONGO_URL}/${DB_NAME}`)
-  .then(() => { })
-  .catch(err => console.error('MongoDB connection error:', err));
+function buildMongoUri() {
+  if (!MONGO_URL) {
+    console.error('MONGO_URL environment variable is not set');
+    return null;
+  }
+  const trimmed = MONGO_URL.replace(/\/$/, '');
+  // Atlas URIs often include ?retryWrites=... — only treat path segment before ? as DB name
+  const hasDbInPath = /mongodb(\+srv)?:\/\/[^/]+\/[^/?]+/.test(trimmed);
+  if (hasDbInPath) return trimmed;
+  return `${trimmed}/${DB_NAME}`;
+}
+
+const mongoUri = buildMongoUri();
+if (mongoUri) {
+  mongoose.connect(mongoUri)
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => console.error('MongoDB connection error:', err));
+}
 
 // ==================== SOCKET.IO ====================
 const io = new Server(server, {
   cors: {
-    origin: allowedOrigins,
+    origin: (origin, callback) => {
+      if (isAllowedOrigin(origin)) return callback(null, true);
+      callback(null, false);
+    },
     methods: ['GET', 'POST'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']

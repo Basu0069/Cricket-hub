@@ -14,7 +14,9 @@ services:
       - key: JWT_SECRET
         sync: false
       - key: FRONTEND_URL
-        value: https://cricket-hub-rp86.onrender.com
+        sync: false
+      - key: REACT_APP_GOOGLE_CLIENT_ID
+        value: 473404359350-1jpjmc0g7gndo014ebhkjjbkhu9eouko.apps.googleusercontent.com
       - key: GEMINI_API_KEY
         sync: false
       - key: GOOGLE_CLIENT_ID
