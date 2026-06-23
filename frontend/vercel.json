@@ -19,6 +19,6 @@
     }
   ],
   "env": {
-    "REACT_APP_BACKEND_URL": "https://cricket-hub-rp86.onrender.com/"
+    "REACT_APP_BACKEND_URL": "https://cricket-hub-rp86.onrender.com"
   }
 }
